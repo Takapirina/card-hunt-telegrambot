@@ -21,7 +21,7 @@ class SeleniumService:
             chrome_options.add_argument('--no-sandbox') 
             chrome_options.add_argument('--disable-dev-shm-usage')
 
-            self.service = Service('./chromedriver')
+            self.service = Service('/app/.chrome-for-testing/chromedriver-linux64/chromedriver')
             self.driver = webdriver.Chrome(service=self.service, options=chrome_options)
         except Exception as e:
             print(f"Errore durante l'inizializzazione del driver Selenium: {e}")
