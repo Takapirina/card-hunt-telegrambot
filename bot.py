@@ -23,16 +23,13 @@ def main():
     load_dotenv()
     application = Application.builder().token(os.getenv("BOT_TOKEN")).build()
 
+    if application is None:
+        print("Errore: applicazione non creata!")
+        return
+
     download_user_json_file()
     downloads_wishlist_user()
     download_brand_json_file()
-
-    application.job_queue.run_repeating(
-        invia_messaggio_utenti,
-        interval=1 * 60 * 60, 
-        first=0
-    )
-
 
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("help", help))
@@ -40,14 +37,20 @@ def main():
     application.add_handler(CommandHandler("lista", get_lista))
     application.add_handler(CommandHandler("del_carta", delete_card))
     
-    #application.add_handler(MessageHandler(filters.TEXT & filters.Command("setcommands"), set_commands))
-
     application.add_handler(aggiungi_carta_conversation_handler)
     application.add_handler(conversation_handler)
     application.add_handler(delete_conversationHandler)
     
-    # Gestione dei callback
     application.add_handler(CallbackQueryHandler(handle_callback))
+
+    if application.job_queue:
+        application.job_queue.run_repeating(
+            invia_messaggio_utenti,
+            interval=1 * 60 * 60, 
+            first=0
+        )
+    else:
+        print("Errore: job_queue non è stato creato!")
 
     application.run_polling(allowed_updates=Update.ALL_TYPES)
 
