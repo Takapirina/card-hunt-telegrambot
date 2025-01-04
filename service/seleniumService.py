@@ -1,5 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
 
@@ -15,8 +16,13 @@ class SeleniumService:
     def _init_driver(self):
         """Inizializza il driver Selenium."""
         try:
-            self.service = Service('./chromedriver')  # Modifica con il percorso corretto
-            self.driver = webdriver.Chrome(service=self.service)
+            chrome_options = Options()
+            chrome_options.add_argument('--headless')
+            chrome_options.add_argument('--no-sandbox') 
+            chrome_options.add_argument('--disable-dev-shm-usage')
+
+            self.service = Service('./chromedriver')
+            self.driver = webdriver.Chrome(service=self.service, options=chrome_options)
         except Exception as e:
             print(f"Errore durante l'inizializzazione del driver Selenium: {e}")
             self.driver = None
@@ -58,7 +64,7 @@ class SeleniumService:
             return None
         
     def update_prize(self, url):
-            
+        """Aggiorna il prezzo sulla pagina."""
         try:
             self.driver.get(url)
             lista_dati = self.driver.find_elements(By.CSS_SELECTOR, "div.info-list-container dl.labeled dd")
