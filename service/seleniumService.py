@@ -2,6 +2,9 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
 
 class SeleniumService:
@@ -33,11 +36,17 @@ class SeleniumService:
             raise RuntimeError("Il driver Selenium non è stato inizializzato correttamente.")
         try:
             self.driver.get(url)
-            if self.driver.find_element(By.CSS_SELECTOR, "img.is-front") is not None:
-                tabella = self.driver.find_element(By.CSS_SELECTOR, ".table.article-table.table-striped")
-                listaPrezzi = tabella.find_elements(By.CSS_SELECTOR, 
-                    "div.price-container.d-none.d-md-flex.justify-content-end span.color-primary.small.text-end.text-nowrap.fw-bold")
-                return float(listaPrezzi[0].text.replace("€", "").replace(",", ".").strip())
+
+            WebDriverWait(self.driver, 10).until(
+                EC.visibility_of_element_located((By.CSS_SELECTOR, "img.is-front"))
+            )
+
+            tabella = WebDriverWait(self.driver, 10).until(
+                EC.visibility_of_element_located((By.CSS_SELECTOR, ".table.article-table.table-striped"))
+            )
+            listaPrezzi = tabella.find_elements(By.CSS_SELECTOR, 
+                "div.price-container.d-none.d-md-flex.justify-content-end span.color-primary.small.text-end.text-nowrap.fw-bold")
+            return float(listaPrezzi[0].text.replace("€", "").replace(",", ".").strip())
         except NoSuchElementException:
             print("Elemento richiesto non trovato sulla pagina.")
             return None
@@ -51,11 +60,17 @@ class SeleniumService:
             raise RuntimeError("Il driver Selenium non è stato inizializzato correttamente.")
         try:
             self.driver.get(url)
-            if self.driver.find_element(By.CSS_SELECTOR, "img.is-front") is not None:
-                tabella = self.driver.find_element(By.CSS_SELECTOR, ".table.article-table.table-striped")
-                listaPrezzi = tabella.find_elements(By.CSS_SELECTOR, 
-                    "div.price-container.d-none.d-md-flex.justify-content-end span.color-primary.small.text-end.text-nowrap.fw-bold")
-                return float(listaPrezzi[0].text.replace("€", "").replace(",", ".").strip())
+
+            WebDriverWait(self.driver, 10).until(
+                EC.visibility_of_element_located((By.CSS_SELECTOR, "img.is-front"))
+            )
+
+            tabella = WebDriverWait(self.driver, 10).until(
+                EC.visibility_of_element_located((By.CSS_SELECTOR, ".table.article-table.table-striped"))
+            )
+            listaPrezzi = tabella.find_elements(By.CSS_SELECTOR, 
+                "div.price-container.d-none.d-md-flex.justify-content-end span.color-primary.small.text-end.text-nowrap.fw-bold")
+            return float(listaPrezzi[0].text.replace("€", "").replace(",", ".").strip())
         except NoSuchElementException:
             print("Elemento richiesto non trovato sulla pagina.")
             return None
@@ -67,13 +82,19 @@ class SeleniumService:
         """Aggiorna il prezzo sulla pagina."""
         try:
             self.driver.get(url)
+
+            WebDriverWait(self.driver, 10).until(
+                EC.visibility_of_element_located((By.CSS_SELECTOR, "div.info-list-container dl.labeled dd"))
+            )
             lista_dati = self.driver.find_elements(By.CSS_SELECTOR, "div.info-list-container dl.labeled dd")
             if len(lista_dati) >= 6 and len(lista_dati) <= 10:
                 prezzo_corrente = float(lista_dati[6].text.replace("€","").replace(",","."))
             else:
                 prezzo_corrente = float(lista_dati[7].text.replace("€","").replace(",","."))
 
-            tabella = self.driver.find_element(By.CSS_SELECTOR, ".table.article-table.table-striped")
+            tabella = WebDriverWait(self.driver, 10).until(
+                EC.visibility_of_element_located((By.CSS_SELECTOR, ".table.article-table.table-striped"))
+            )
             listaPrezzi = tabella.find_elements(By.CSS_SELECTOR, 
                 "div.price-container.d-none.d-md-flex.justify-content-end span.color-primary.small.text-end.text-nowrap.fw-bold")
             prezzo_attuale =  float(listaPrezzi[0].text.replace("€", "").replace(",", ".").strip())
