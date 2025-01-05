@@ -8,6 +8,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium_stealth import stealth
 import traceback
 
+from service.dropBoxService import upload_screenshot_result
+
 class SeleniumService:
     _instance = None
 
@@ -57,6 +59,8 @@ class SeleniumService:
             print(f"Page loaded: {self.driver.current_url}")
 
             wait = WebDriverWait(self.driver, 10)
+            self.driver.save_screenshot('screenshot.png')
+            upload_screenshot_result()
             img = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "img.is-front")))
             if img:
                 print("Elemento trovato!")

@@ -97,3 +97,18 @@ def upload_wishlist_user_single(name_file):
         print(f"File {name_file} caricato correttamente su Dropbox.")
     except Exception as e:
         print(f"Errore durante l'upload del file: {e}")
+
+def upload_screenshot_result():
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) 
+    local_path = os.path.join(base_dir, 'screenshot.png')
+    dropbox_path = "/card-hunt-telegrambot/screenshot.png"
+
+    if not os.path.exists(local_path):
+        raise FileNotFoundError(f"Il file '{local_path}' non esiste.")
+    try:
+        with open(local_path, "rb") as f:
+            data = f.read()
+            DBX.files_upload(data, dropbox_path, mode=dropbox.files.WriteMode("overwrite"))
+        print("screenshot caricato correttamente su Dropbox.")
+    except Exception as e:
+        print(f"Errore durante l'upload del file: {e}")
