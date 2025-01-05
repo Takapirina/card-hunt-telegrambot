@@ -6,6 +6,7 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium_stealth import stealth
+import traceback
 
 class SeleniumService:
     _instance = None
@@ -52,6 +53,7 @@ class SeleniumService:
         try:
             self.driver.get(url)
             self.driver.implicitly_wait(10)
+            print(f"Page loaded: {self.driver.current_url}")
 
             img = self.driver.find_element(By.CSS_SELECTOR, "img.is-front")
             if img:
@@ -61,16 +63,13 @@ class SeleniumService:
                                                     "div.price-container.d-none.d-md-flex.justify-content-end span.color-primary.small.text-end.text-nowrap.fw-bold")
             
             if listaPrezzi:
+                print(f"Prezzo trovato: {listaPrezzi[0].text}")
                 return float(listaPrezzi[0].text.replace("€", "").replace(",", ".").strip())
             else:
                 print("Prezzi non trovati.")
                 return None
-        except NoSuchElementException:
-            print("Elemento richiesto non trovato sulla pagina.")
-            return None
         except Exception as e:
             print(f"Errore durante la validazione dell'URL: {str(e)}")
-            import traceback
             traceback.print_exc()  # Stampa il traceback completo dell'errore
             return None
         
