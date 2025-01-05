@@ -52,10 +52,10 @@ class SeleniumService:
             raise RuntimeError("Il driver Selenium non è stato inizializzato correttamente.")
         try:
             self.driver.get(url)
-            self.driver.implicitly_wait(10)
             print(f"Page loaded: {self.driver.current_url}")
 
-            img = self.driver.find_element(By.CSS_SELECTOR, "img.is-front")
+            wait = WebDriverWait(self.driver, 10)
+            img = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "img.is-front")))
             if img:
                 print("Elemento trovato!")
                 tabella = self.driver.find_element(By.CSS_SELECTOR, ".table.article-table.table-striped")
