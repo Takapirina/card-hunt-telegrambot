@@ -26,10 +26,9 @@ async def handle_get_info_card(update: Update, context: ContextTypes.DEFAULT_TYP
     query = update.callback_query
     await query.answer()
 
-    # Controlla che sia una callback di informazioni
     if query.data.startswith("info_"):
         user = carica_utente(query.from_user.id)
-        carta_id = int(query.data.split("_")[1])  # Estrai l'ID della carta
+        carta_id = int(query.data.split("_")[1])
 
         carta = user.get_carta(carta_id)
         flags = ['🇬🇧','🇫🇷','🇩🇪','🇪🇸','🇮🇹','🇨🇳','🇯🇵','🇵🇹','🏳️','🇰🇷','🇹🇼']

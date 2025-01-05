@@ -12,7 +12,6 @@ class WishList:
         self.contatore_id = self._load_wishlist().get("contatore_id", 1)
 
     def _ensure_file_exists(self):
-        """Crea il file JSON se non esiste."""
         if not os.path.exists(self.file_path):
             os.makedirs(os.path.dirname(self.file_path), exist_ok=True)
             with open(self.file_path, "w") as file:
@@ -21,7 +20,6 @@ class WishList:
             upload_wishlist_user_single(self.file_path)
 
     def add_carta(self, carta):
-        """Aggiunge una carta alla lista."""
         data = self._load_wishlist()
         carta.id_carta = data["contatore_id"] 
         data["contatore_id"] += 1
@@ -30,7 +28,6 @@ class WishList:
         upload_wishlist_user_single(self.file_path)
 
     def remove_carta(self, id_carta):
-        """Rimuove una carta dalla lista usando il suo ID."""
         data = self._load_wishlist()
         data["carte"] = [carta for carta in data["carte"] if carta["id_carta"] != id_carta]
         self._save_wishlist(data)
@@ -56,12 +53,10 @@ class WishList:
         
         if carta_trovata:
             self._save_wishlist(data)
-            print(f"prezzo aggiornato per la carta con Id {id_carta} a {nuovo_prezzo}")
         else:
             print(f"Carta con Id {id_carta} non trovata.")
 
     def visualizza_lista(self):
-        """Visualizza tutte le carte nella wishlist."""
         data = self._load_wishlist()
         carte = data.get("carte", [])
         if not carte:
@@ -79,7 +74,7 @@ class WishList:
             with open(self.file_path, "r") as file:
                 return json.load(file)
         except json.JSONDecodeError:
-            print(f"Errore nella lettura del file JSON corrotto: {self.file_path}")
+            print(f"_load_wishlist | Errore nella lettura del file JSON corrotto: {self.file_path}")
         return {"id_utente": self.id_utente, "carte": [], "contatore_id": 1}
 
     def _save_wishlist(self, data):
@@ -90,4 +85,4 @@ class WishList:
 
             upload_wishlist_user_single(self.file_path)
         except Exception as e:
-            print(f"Errore durante il salvataggio del file: {e}")
+            print(f"_save_wishlist | Errore durante il salvataggio del file: {e}")

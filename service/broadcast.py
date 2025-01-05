@@ -53,7 +53,7 @@ async def invia_messaggio_utenti(context: ContextTypes.DEFAULT_TYPE):
                 else:
                     stringa_di_variazione_settimanale = f"[0% Settimanale]"
 
-                prezzo_mensile = carta["prezzi_mensili"][-1]  # Ultimo prezzo mensile disponibile
+                prezzo_mensile = carta["prezzi_mensili"][-1] 
                 percentuale_di_variazione_mensile = round(((data["prezzo_attuale"] - prezzo_mensile) / prezzo_mensile) * 100, 2)
                 if percentuale_di_variazione_mensile < 0:
                     stringa_di_variazione_mensile = f"[{percentuale_di_variazione_mensile}%🔽 Mensile]"
@@ -75,7 +75,6 @@ async def invia_messaggio_utenti(context: ContextTypes.DEFAULT_TYPE):
                 if nota == "":
                     nota = "⏳ Il prezzo è stabile, nessun cambiamento significativo."
 
-                # Composizione del messaggio per la carta
                 stringa = f"🗂️<a href='{carta['url_card']}'>{carta['nome_personalizzato']}</a> <b>({carta['codice_espansione']} {carta['numero_carta']})</b> {flags[int(carta['lingua_carta'])-1]} [{carta['prezzo_iniziale']}€]\n"
                 stringa += f"<b>Prezzo attuale</b>: {carta['prezzo_attuale']}€ {stringa_di_variazione} | <b>Prezzo di tendenza</b>: {data['prezzo_di_tendenza']}€ {stringa_di_variazione_tendenza}\n"
                 stringa += f"<b>Variazione Settimanale</b>: {stringa_di_variazione_settimanale} | <b>Variazione Mensile</b>: {stringa_di_variazione_mensile}\n"
@@ -86,7 +85,6 @@ async def invia_messaggio_utenti(context: ContextTypes.DEFAULT_TYPE):
             selenium.quit()
 
         try:
-            # Unisce tutte le carte nel messaggio
             messaggio_completo = "📢 Aggiornamento periodico: ecco le ultime novità! 🔄\n\n" + "\n".join(carte_recap)
             await context.bot.send_message(
                 chat_id=chat_id,
@@ -94,4 +92,4 @@ async def invia_messaggio_utenti(context: ContextTypes.DEFAULT_TYPE):
                 parse_mode=ParseMode.HTML 
             )
         except Exception as e:
-            print(f"Errore nell'invio del messaggio a {chat_id}: {e}")
+            print(f"invia_messaggio_utenti | Errore nell'invio del messaggio a {chat_id}: {e}")

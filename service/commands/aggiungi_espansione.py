@@ -8,7 +8,6 @@ BRAND, GENERAZIONE_POKEMON, IS_ASIATICA, NOME_ESPANSIONEPOKEMON, CODICE_ESPANSIO
 async def start_conversation(update: Update, context: CallbackContext) -> int:
     keyboard = [[InlineKeyboardButton(brand.name, callback_data=brand.value)] for brand in Brand]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    print(keyboard)
     await update.message.reply_text("Scegli il brand dell'espansione", reply_markup=reply_markup)
     return BRAND
 

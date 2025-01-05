@@ -83,7 +83,6 @@ class BrandPokemon(IBrand):
             if (self.brand_nome.value not in brand_data or
                 generazione not in brand_data[self.brand_nome.value] or
                 sezione not in brand_data[self.brand_nome.value][generazione]):
-                print("Struttura del JSON non valida o dati mancanti.")
                 return False
 
             espansioni = brand_data[self.brand_nome.value][generazione][sezione]
@@ -104,7 +103,7 @@ class BrandPokemon(IBrand):
             return True
 
         except Exception as e:
-            print(f"Errore durante la rimozione dell'espansione: {e}")
+            print(f"remove_espansione | Errore durante la rimozione dell'espansione: {e}")
             return False
         
     def controlla_espansione_esistente(self, nome_espansione, codice_espansione, isAsiatica):
@@ -112,11 +111,9 @@ class BrandPokemon(IBrand):
         brand_data = self.get_brand_json()
         brand_key = self.brand_nome.value
 
-        # Verifica che il brand esista
         if brand_key not in brand_data:
             return False
 
-        # Scansiona tutte le generazioni
         for generazione in brand_data[brand_key]:
             if sezione in brand_data[brand_key][generazione]:
                 for espansione in brand_data[brand_key][generazione][sezione]:

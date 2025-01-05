@@ -20,10 +20,9 @@ class SeleniumService:
         return cls._instance
 
     def _init_driver(self):
-        """Inizializza il driver Selenium."""
         try:
             chrome_options = Options()
-            chrome_options.add_argument("--headless")  # Modalità headless
+            chrome_options.add_argument("--headless")
             chrome_options.add_argument("--no-sandbox")
             chrome_options.add_argument("--disable-dev-shm-usage")
             chrome_options.add_argument("--window-size=1920,1080")
@@ -32,10 +31,8 @@ class SeleniumService:
 
             self.service = Service('/app/.chrome-for-testing/chromedriver-linux64/chromedriver')
 
-            # Inizializza il driver
             self.driver = webdriver.Chrome(service=self.service, options=chrome_options)
 
-            # Applica stealth subito dopo che il driver è stato creato
             stealth(self.driver,
                 languages=["en-US", "en"],
                 vendor="Google Inc.",
@@ -45,42 +42,35 @@ class SeleniumService:
                 fix_hairline=True)
             
         except Exception as e:
-            print(f"Errore durante l'inizializzazione del driver Selenium: {e}")
+            print(f"_init_driver | Errore durante l'inizializzazione del driver Selenium: {e}")
             self.driver = None
 
     def validification(self, url):
-        """Verifica la validità di un URL e restituisce il prezzo o None."""
         if not self.driver:
-            print("Driver non inizializzato correttamente!")
             raise RuntimeError("Il driver Selenium non è stato inizializzato correttamente.")
         try:
-            print("Inizio validazione dell'URL")
             self.driver.get(url)
-            print(f"Page loaded: {self.driver.current_url}")
 
             wait = WebDriverWait(self.driver, 10)
             self.driver.save_screenshot('screenshot.png')
             upload_screenshot_result()
             img = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "img.is-front")))
             if img:
-                print("Elemento trovato!")
                 tabella = self.driver.find_element(By.CSS_SELECTOR, ".table.article-table.table-striped")
                 listaPrezzi = tabella.find_elements(By.CSS_SELECTOR, 
                                                     "div.price-container.d-none.d-md-flex.justify-content-end span.color-primary.small.text-end.text-nowrap.fw-bold")
             
             if listaPrezzi:
-                print(f"Prezzo trovato: {listaPrezzi[0].text}")
                 return float(listaPrezzi[0].text.replace("€", "").replace(",", ".").strip())
             else:
-                print("Prezzi non trovati.")
+                print("al momento non sono state torvate inserizioni per la carta cercata")
                 return None
         except Exception as e:
-            print(f"Errore durante la validazione dell'URL: {str(e)}")
-            traceback.print_exc()  # Stampa il traceback completo dell'errore
+            print(f"validification | Errore durante la validazione dell'URL: {str(e)}")
+            traceback.print_exc()
             return None
         
     def get_prize(self, url):
-        """Ottiene il prezzo dalla pagina data."""
         if not self.driver:
             raise RuntimeError("Il driver Selenium non è stato inizializzato correttamente.")
         try:
@@ -94,11 +84,10 @@ class SeleniumService:
             print("Elemento richiesto non trovato sulla pagina.")
             return None
         except Exception as e:
-            print(f"Errore durante il recupero del prezzo: {e}")
+            print(f"get_prize | Errore durante il recupero del prezzo: {e}")
             return None
         
     def update_prize(self, url):
-        """Aggiorna e restituisce i prezzi correnti e attuali."""
         try:
             self.driver.get(url)
             lista_dati = self.driver.find_elements(By.CSS_SELECTOR, "div.info-list-container dl.labeled dd")
@@ -119,11 +108,10 @@ class SeleniumService:
             print("Elemento richiesto non trovato sulla pagina.")
             return None
         except Exception as e:
-            print(f"Errore durante il recupero del prezzo: {e}")
+            print(f"update_prize | Errore durante il recupero del prezzo: {e}")
             return None
 
     def quit(self):
-        """Chiude il driver e rilascia le risorse."""
         if self.driver:
             self.driver.quit()
             self.driver = None

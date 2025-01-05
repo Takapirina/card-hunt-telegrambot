@@ -78,7 +78,7 @@ def carica_utente(id_utente: int) -> Utente:
 
         if str(id_utente) in utenti_data:
             utente_data = utenti_data[str(id_utente)]
-            return Utente.from_json(utente_data)  # Ora funziona correttamente
+            return Utente.from_json(utente_data)
         else:
             print(f"Utente con ID {id_utente} non trovato.")
             return None

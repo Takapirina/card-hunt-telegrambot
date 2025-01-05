@@ -5,7 +5,6 @@ from datetime import datetime
 
 from service.seleniumService import SeleniumService
 
-#vale in quasi tutti i casi tranne alcuni girda teracrystal festival ex
 class Versione(Enum):
     REGULAR = "V1"
     ARTRARE = "V2"
@@ -51,10 +50,10 @@ class ICard(ABC):
         self.id_carta = None
 
         self.data_inserimento = datetime.now()
-        self.prezzo_iniziale = None #prezzo che viene assegnato qaundo viene fatto il primo scraping
-        self.prezzo_attuale = None #prezzo corrente o ultimo scraping fatto
+        self.prezzo_iniziale = None
+        self.prezzo_attuale = None
         self.prezzo_settimanale = None
-        self.prezzi_mensili = [] #prezzo salvato dell'ultimo mese
+        self.prezzi_mensili = []
 
     @abstractmethod
     def genera_url(self):
@@ -102,7 +101,6 @@ class CardPokemon(ICard):
 
         try:
             selenium = SeleniumService()
-            print(f"card entity | nel blocco try prima di validification url card da verificare: {url}")
             valid_url = selenium.validification(url)
             if valid_url is not None:
                 self.prezzo_iniziale = valid_url

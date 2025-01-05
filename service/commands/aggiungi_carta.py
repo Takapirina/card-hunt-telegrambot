@@ -263,15 +263,13 @@ async def end_conversation(update: Update, context: CallbackContext) -> int:
         context.user_data['condizione'],
         context.user_data['venditore']
     )
-    print(carta)
 
     timeout = 30
     interval = 0.5
     start_time = asyncio.get_event_loop().time()
 
     while asyncio.get_event_loop().time() - start_time < timeout:
-        print("entro nel ciclo di verifica e controllo se la carta ha prodotto un url")
-        if carta.url_card:  # Controlla se l'URL è stato generato
+        if carta.url_card:
             if sent_message:
                 await context.bot.delete_message(
                     chat_id=sent_message.chat_id,
@@ -283,7 +281,6 @@ async def end_conversation(update: Update, context: CallbackContext) -> int:
 
         await asyncio.sleep(interval)
 
-    # Timeout raggiunto
     if sent_message:
         await context.bot.delete_message(
             chat_id=sent_message.chat_id,

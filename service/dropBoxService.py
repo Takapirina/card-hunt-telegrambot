@@ -6,7 +6,6 @@ from dotenv import load_dotenv
 load_dotenv()
 DROPBOX_ACCESS_TOKEN = os.getenv("DROP_BOX_TOKEN")
 
-# Inizializza il client Dropbox (singleton per evitare di reinizializzarlo ogni volta)
 DBX = dropbox.Dropbox(DROPBOX_ACCESS_TOKEN)
 
 def download_user_json_file():
@@ -17,9 +16,8 @@ def download_user_json_file():
         metdata, res = DBX.files_download(path=dropbox_path)
         with open(local_path,"wb") as f:
             f.write(res.content)
-        print("file user.json scaricato correttamente da dropbox")
     except dropbox.exceptions.ApiError as e:
-        print(f"Errore durante il download: {e}")
+        print(f"download_user_json_file | Errore durante il download del file user.json - Errore: {e}")
 
 def upload_user_json_file():
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) 
@@ -32,9 +30,8 @@ def upload_user_json_file():
         with open(local_path, "rb") as f:
             data = f.read()
             DBX.files_upload(data, dropbox_path, mode=dropbox.files.WriteMode("overwrite"))
-        print("File user.json caricato correttamente su Dropbox.")
     except Exception as e:
-        print(f"Errore durante l'upload del file: {e}")
+        print(f"upload_user_json_file | Errore durante l'upload del file user.json - Errore: {e}")
 
 def download_brand_json_file():
     local_path = os.path.join("brand.json")
@@ -44,9 +41,8 @@ def download_brand_json_file():
         metdata, res = DBX.files_download(path=dropbox_path)
         with open(local_path,"wb") as f:
             f.write(res.content)
-        print("file brand.json scaricato correttamente da dropbox")
     except dropbox.exceptions.ApiError as e:
-        print(f"Errore durante il download: {e}")
+        print(f"download_brand_json_file | Errore durante il download di brand.json - Errore : {e}")
 
 def upload_brand_json_file():
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) 
@@ -59,9 +55,8 @@ def upload_brand_json_file():
         with open(local_path, "rb") as f:
             data = f.read()
             DBX.files_upload(data, dropbox_path, mode=dropbox.files.WriteMode("overwrite"))
-        print("File brand.json caricato correttamente su Dropbox.")
     except Exception as e:
-        print(f"Errore durante l'upload del file: {e}")
+        print(f"upload_brand_json_file | Errore durante l'upload del file brand.json -Errore: {e}")
 
 def downloads_wishlist_user():
     with open("user.json", "r") as f:
@@ -79,9 +74,8 @@ def downloads_wishlist_user():
             metadata, res = DBX.files_download(path=dropbox_path_relative)
             with open(local_path_relative, "wb") as f:
                 f.write(res.content)
-            print(f"file {user_info['wishlist']} scaricato correttamente da Dropbox")
         except dropbox.exceptions.ApiError as e:
-            print(f"Errore durante il download: {e}")
+            print(f"downloads_wishlist_user | Errore durante il download {user_info['wishlist']} - Errore: {e}")
 
 def upload_wishlist_user_single(name_file):
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) 
@@ -94,9 +88,8 @@ def upload_wishlist_user_single(name_file):
         with open(local_path, "rb") as f:
             data = f.read()
             DBX.files_upload(data, dropbox_path, mode=dropbox.files.WriteMode("overwrite"))
-        print(f"File {name_file} caricato correttamente su Dropbox.")
     except Exception as e:
-        print(f"Errore durante l'upload del file: {e}")
+        print(f"upload_wishlist_user_single | Errore durante l'upload del file {name_file} - Errore: {e}")
 
 def upload_screenshot_result():
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) 
@@ -109,6 +102,5 @@ def upload_screenshot_result():
         with open(local_path, "rb") as f:
             data = f.read()
             DBX.files_upload(data, dropbox_path, mode=dropbox.files.WriteMode("overwrite"))
-        print("screenshot caricato correttamente su Dropbox.")
     except Exception as e:
-        print(f"Errore durante l'upload del file: {e}")
+        print(f"upload_screenshot_result | Errore durante l'upload del file screnshot - Errore: {e}")
