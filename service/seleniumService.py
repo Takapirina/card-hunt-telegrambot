@@ -6,6 +6,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium_stealth import stealth
 
 class SeleniumService:
     _instance = None
@@ -25,7 +26,17 @@ class SeleniumService:
             chrome_options.add_argument('--disable-dev-shm-usage')
 
             self.service = Service('/app/.chrome-for-testing/chromedriver-linux64/chromedriver')
+            
             self.driver = webdriver.Chrome(service=self.service, options=chrome_options)
+
+            stealth(self.driver,
+            languages=["en-US", "en"],
+            vendor="Google Inc.",
+            platform="MacIntel",
+            webgl_vendor="Intel Inc.",
+            renderer="Intel Iris OpenGL Engine",
+            fix_hairline=True)
+            
         except Exception as e:
             print(f"Errore durante l'inizializzazione del driver Selenium: {e}")
             self.driver = None
