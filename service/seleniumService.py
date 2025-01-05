@@ -70,7 +70,9 @@ class SeleniumService:
             print("Elemento richiesto non trovato sulla pagina.")
             return None
         except Exception as e:
-            print(f"Errore durante la validazione dell'URL: {e}")
+            print(f"Errore durante la validazione dell'URL: {str(e)}")
+            import traceback
+            traceback.print_exc()  # Stampa il traceback completo dell'errore
             return None
         
     def get_prize(self, url):
