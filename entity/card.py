@@ -102,6 +102,7 @@ class CardPokemon(ICard):
 
         try:
             selenium = SeleniumService()
+            print(f"card entity | nel blocco try prima di validification url card da verificare: {url}")
             valid_url = selenium.validification(url)
             if valid_url is not None:
                 self.prezzo_iniziale = valid_url

@@ -49,6 +49,7 @@ class SeleniumService:
     def validification(self, url):
         """Verifica la validità di un URL e restituisce il prezzo o None."""
         if not self.driver:
+            print("Driver non inizializzato correttamente!")
             raise RuntimeError("Il driver Selenium non è stato inizializzato correttamente.")
         try:
             print("Inizio validazione dell'URL")
