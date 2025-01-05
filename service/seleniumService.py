@@ -19,21 +19,24 @@ class SeleniumService:
         """Inizializza il driver Selenium."""
         try:
             chrome_options = Options()
-            chrome_options.add_argument('--headless')
-            chrome_options.add_argument('--no-sandbox') 
-            chrome_options.add_argument('--disable-dev-shm-usage')
+            chrome_options.add_argument("--headless")  # Modalità headless
+            chrome_options.add_argument("--no-sandbox")
+            chrome_options.add_argument("--disable-dev-shm-usage")
+            chrome_options.add_argument("--window-size=1920,1080")
+            chrome_options.add_argument("--disable-gpu")
+            chrome_options.add_argument("--disable-blink-features=AutomationControlled")
 
             self.service = Service('/app/.chrome-for-testing/chromedriver-linux64/chromedriver')
 
             self.driver = webdriver.Chrome(service=self.service, options=chrome_options)
 
             stealth(self.driver,
-            languages=["en-US", "en"],
-            vendor="Google Inc.",
-            platform="MacIntel",
-            webgl_vendor="Intel Inc.",
-            renderer="Intel Iris OpenGL Engine",
-            fix_hairline=True)
+                languages=["en-US", "en"],
+                vendor="Google Inc.",
+                platform="MacIntel",
+                webgl_vendor="Intel Inc.",
+                renderer="Intel Iris OpenGL Engine",
+                fix_hairline=True)
             
         except Exception as e:
             print(f"Errore durante l'inizializzazione del driver Selenium: {e}")
