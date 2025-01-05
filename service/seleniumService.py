@@ -4,6 +4,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 from selenium_stealth import stealth
 
 class SeleniumService:
@@ -50,11 +51,21 @@ class SeleniumService:
             raise RuntimeError("Il driver Selenium non è stato inizializzato correttamente.")
         try:
             self.driver.get(url)
-            if self.driver.find_element(By.CSS_SELECTOR, "img.is-front") is not None:
-                tabella = self.driver.find_element(By.CSS_SELECTOR, ".table.article-table.table-striped")
-                listaPrezzi = tabella.find_elements(By.CSS_SELECTOR, 
-                    "div.price-container.d-none.d-md-flex.justify-content-end span.color-primary.small.text-end.text-nowrap.fw-bold")
+            
+            # Aspetta che l'elemento img.is-front sia presente e visibile sulla pagina
+            WebDriverWait(self.driver, 10).until(
+                EC.visibility_of_element_located((By.CSS_SELECTOR, "img.is-front"))
+            )
+            
+            tabella = self.driver.find_element(By.CSS_SELECTOR, ".table.article-table.table-striped")
+            listaPrezzi = tabella.find_elements(By.CSS_SELECTOR, 
+                "div.price-container.d-none.d-md-flex.justify-content-end span.color-primary.small.text-end.text-nowrap.fw-bold")
+            
+            if listaPrezzi:
                 return float(listaPrezzi[0].text.replace("€", "").replace(",", ".").strip())
+            else:
+                print("Prezzi non trovati.")
+                return None
         except NoSuchElementException:
             print("Elemento richiesto non trovato sulla pagina.")
             return None
