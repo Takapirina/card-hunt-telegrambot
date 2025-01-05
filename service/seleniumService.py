@@ -77,6 +77,12 @@ class SeleniumService:
             self.driver.get(url)
             if self.driver.find_element(By.CSS_SELECTOR, "img.is-front") is not None:
                 tabella = self.driver.find_element(By.CSS_SELECTOR, ".table.article-table.table-striped")
+
+                WebDriverWait(self.driver, 10).until(
+                    EC.presence_of_all_elements_located((By.CSS_SELECTOR, 
+                        "div.price-container.d-none.d-md-flex.justify-content-end span.color-primary.small.text-end.text-nowrap.fw-bold"))
+                )
+
                 listaPrezzi = tabella.find_elements(By.CSS_SELECTOR, 
                     "div.price-container.d-none.d-md-flex.justify-content-end span.color-primary.small.text-end.text-nowrap.fw-bold")
                 return float(listaPrezzi[0].text.replace("€", "").replace(",", ".").strip())
@@ -99,17 +105,11 @@ class SeleniumService:
             tabella = self.driver.find_element(By.CSS_SELECTOR, ".table.article-table.table-striped")
             listaPrezzi = tabella.find_elements(By.CSS_SELECTOR, 
                 "div.price-container.d-none.d-md-flex.justify-content-end span.color-primary.small.text-end.text-nowrap.fw-bold")
-            if len(listaPrezzi) >0 :
-                prezzo_attuale =  float(listaPrezzi[0].text.replace("€", "").replace(",", ".").strip())
-                return {
-                    "prezzo_di_tendenza": prezzo_corrente,
-                    "prezzo_attuale" : prezzo_attuale
-                }
-            else:
-               return {
-                    "prezzo_di_tendenza": prezzo_corrente,
-                    "prezzo_attuale" : None
-                }
+            prezzo_attuale =  float(listaPrezzi[0].text.replace("€", "").replace(",", ".").strip())
+            return {
+                "prezzo_di_tendenza": prezzo_corrente,
+                "prezzo_attuale" : prezzo_attuale
+            }
         except NoSuchElementException:
             print("Elemento richiesto non trovato sulla pagina.")
             return None
