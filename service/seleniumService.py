@@ -51,6 +51,7 @@ class SeleniumService:
         if not self.driver:
             raise RuntimeError("Il driver Selenium non è stato inizializzato correttamente.")
         try:
+            print("Inizio validazione dell'URL")
             self.driver.get(url)
             print(f"Page loaded: {self.driver.current_url}")
 
