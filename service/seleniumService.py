@@ -100,6 +100,7 @@ class SeleniumService:
             listaPrezzi = tabella.find_elements(By.CSS_SELECTOR, 
                 "div.price-container.d-none.d-md-flex.justify-content-end span.color-primary.small.text-end.text-nowrap.fw-bold")
             prezzo_attuale =  float(listaPrezzi[0].text.replace("€", "").replace(",", ".").strip())
+            print(listaPrezzi)
             return {
                 "prezzo_di_tendenza": prezzo_corrente,
                 "prezzo_attuale" : prezzo_attuale

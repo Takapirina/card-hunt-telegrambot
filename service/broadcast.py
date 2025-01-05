@@ -23,6 +23,7 @@ async def invia_messaggio_utenti(context: ContextTypes.DEFAULT_TYPE):
             for carta in wishList["carte"]:
                 url = carta["url_card"]
                 data = selenium.update_prize(url)
+                print(data)
                 dizionari.append(data)
                 user.aggiorna_carta_prezzo(carta["id_carta"], data["prezzo_attuale"])
 
