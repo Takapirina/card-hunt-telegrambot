@@ -28,8 +28,10 @@ class SeleniumService:
 
             self.service = Service('/app/.chrome-for-testing/chromedriver-linux64/chromedriver')
 
+            # Inizializza il driver
             self.driver = webdriver.Chrome(service=self.service, options=chrome_options)
 
+            # Applica stealth subito dopo che il driver è stato creato
             stealth(self.driver,
                 languages=["en-US", "en"],
                 vendor="Google Inc.",
@@ -79,14 +81,14 @@ class SeleniumService:
             return None
         
     def update_prize(self, url):
-            
+        """Aggiorna e restituisce i prezzi correnti e attuali."""
         try:
             self.driver.get(url)
             lista_dati = self.driver.find_elements(By.CSS_SELECTOR, "div.info-list-container dl.labeled dd")
             if len(lista_dati) >= 6 and len(lista_dati) <= 10:
-                prezzo_corrente = float(lista_dati[6].text.replace("€","").replace(",","."))
+                prezzo_corrente = float(lista_dati[6].text.replace("€", "").replace(",", "."))
             else:
-                prezzo_corrente = float(lista_dati[7].text.replace("€","").replace(",","."))
+                prezzo_corrente = float(lista_dati[7].text.replace("€", "").replace(",", "."))
 
             tabella = self.driver.find_element(By.CSS_SELECTOR, ".table.article-table.table-striped")
             listaPrezzi = tabella.find_elements(By.CSS_SELECTOR, 
