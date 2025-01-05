@@ -99,12 +99,17 @@ class SeleniumService:
             tabella = self.driver.find_element(By.CSS_SELECTOR, ".table.article-table.table-striped")
             listaPrezzi = tabella.find_elements(By.CSS_SELECTOR, 
                 "div.price-container.d-none.d-md-flex.justify-content-end span.color-primary.small.text-end.text-nowrap.fw-bold")
-            prezzo_attuale =  float(listaPrezzi[0].text.replace("€", "").replace(",", ".").strip())
-            print(listaPrezzi)
-            return {
-                "prezzo_di_tendenza": prezzo_corrente,
-                "prezzo_attuale" : prezzo_attuale
-            }
+            if len(listaPrezzi) >0 :
+                prezzo_attuale =  float(listaPrezzi[0].text.replace("€", "").replace(",", ".").strip())
+                return {
+                    "prezzo_di_tendenza": prezzo_corrente,
+                    "prezzo_attuale" : prezzo_attuale
+                }
+            else:
+               return {
+                    "prezzo_di_tendenza": prezzo_corrente,
+                    "prezzo_attuale" : None
+                }
         except NoSuchElementException:
             print("Elemento richiesto non trovato sulla pagina.")
             return None

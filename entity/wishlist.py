@@ -39,7 +39,8 @@ class WishList:
 
         for carta in data["carte"]:
             if carta["id_carta"] == id_carta:
-                    carta["prezzo_attuale"] = nuovo_prezzo
+                    if nuovo_prezzo is not None:
+                        carta["prezzo_attuale"] = nuovo_prezzo
                     carta_trovata = True
 
                     data_inserimento = datetime.fromisoformat(carta["data_inserimento"])
