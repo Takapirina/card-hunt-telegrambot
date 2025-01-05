@@ -53,11 +53,9 @@ class SeleniumService:
             self.driver.get(url)
             self.driver.implicitly_wait(10)
 
-            # Trova l'immagine e verifica
             img = self.driver.find_element(By.CSS_SELECTOR, "img.is-front")
             if img:
                 print("Elemento trovato!")
-                # Trova la tabella dei prezzi
                 tabella = self.driver.find_element(By.CSS_SELECTOR, ".table.article-table.table-striped")
                 listaPrezzi = tabella.find_elements(By.CSS_SELECTOR, 
                                                     "div.price-container.d-none.d-md-flex.justify-content-end span.color-primary.small.text-end.text-nowrap.fw-bold")
