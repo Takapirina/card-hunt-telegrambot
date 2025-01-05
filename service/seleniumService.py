@@ -51,7 +51,7 @@ class SeleniumService:
         try:
             self.driver.get(url)
 
-            wait = WebDriverWait(self.driver, 10)
+            wait = WebDriverWait(self.driver, 15)
             self.driver.save_screenshot('screenshot.png')
             upload_screenshot_result()
             img = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "img.is-front")))

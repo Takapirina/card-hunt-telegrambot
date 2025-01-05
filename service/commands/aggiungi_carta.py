@@ -289,6 +289,10 @@ async def end_conversation(update: Update, context: CallbackContext) -> int:
     await query.message.reply_text("‼️ Errore: Impossibile aggiungere la carta (timeout).")
     return ConversationHandler.END
 
+async def exit_conversation(update, context):
+    await update.message.reply_text("🚶‍♂️ Conversazione terminata.")
+    return ConversationHandler.END
+
 aggiungi_carta_conversation_handler = ConversationHandler(
     entry_points=[CommandHandler("add_carta", start_conversation)],
     states={
@@ -304,5 +308,7 @@ aggiungi_carta_conversation_handler = ConversationHandler(
         CARD_CONDITION: [CallbackQueryHandler(card_sale)],
         CARD_SALE: [CallbackQueryHandler(end_conversation)],
     },
-    fallbacks=[],
+    fallbacks=[
+        CommandHandler('exit', exit_conversation),
+    ]
 )

@@ -103,6 +103,10 @@ async def elimina_espansione(update: Update, context: CallbackContext)-> int:
     await query.message.reply_text(f"✅ Espansione eliminata con successo! 🎉")
     return ConversationHandler.END
 
+async def exit_conversation(update, context):
+    await update.message.reply_text("🚶‍♂️ Conversazione terminata.")
+    return ConversationHandler.END
+
 delete_conversationHandler = ConversationHandler(
     entry_points=[CommandHandler('del_espansione',start_conversation)],
     states = {
@@ -111,5 +115,7 @@ delete_conversationHandler = ConversationHandler(
         IS_ASIATICA: [CallbackQueryHandler(espansione)],
         ESPANIONE: [CallbackQueryHandler(elimina_espansione)]
     },
-    fallbacks=[]
+    fallbacks=[
+        CommandHandler('exit', exit_conversation),
+    ]
 )

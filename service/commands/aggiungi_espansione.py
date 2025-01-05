@@ -98,6 +98,10 @@ async def add_espansione_pokemon(update: Update, context: CallbackContext) -> in
     )
     return ConversationHandler.END
 
+async def exit_conversation(update, context):
+    await update.message.reply_text("🚶‍♂️ Conversazione terminata.")
+    return ConversationHandler.END
+
 conversation_handler = ConversationHandler(
     entry_points=[CommandHandler('add_espansione', start_conversation)],
     states={
@@ -107,5 +111,7 @@ conversation_handler = ConversationHandler(
         NOME_ESPANSIONEPOKEMON: [MessageHandler(filters.TEXT & ~filters.COMMAND, cod_espansione)],
         CODICE_ESPANSIONEPOKEMON: [MessageHandler(filters.TEXT & ~filters.COMMAND, add_espansione_pokemon)]
     },
-    fallbacks=[]
+    fallbacks=[
+        CommandHandler('exit', exit_conversation),
+    ]
 )
