@@ -45,7 +45,7 @@ def main():
 
     if application.job_queue:
         application.job_queue.run_repeating(
-            invia_messaggio_utenti(),
+            invia_messaggio_utenti,
             interval=1 * 1 * 60, 
             first=0
         )
