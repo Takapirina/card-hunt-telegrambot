@@ -264,7 +264,7 @@ async def end_conversation(update: Update, context: CallbackContext) -> int:
         context.user_data['venditore']
     )
 
-    timeout = 10
+    timeout = 30
     interval = 0.5
     start_time = asyncio.get_event_loop().time()
 
