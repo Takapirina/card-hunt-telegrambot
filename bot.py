@@ -20,7 +20,6 @@ from service.broadcast import invia_messaggio_utenti
 from service.dropBoxService import download_user_json_file, downloads_wishlist_user ,download_brand_json_file
 
 from web2 import refresh_access_token, update_access_token
-from apscheduler.schedulers.background import BackgroundScheduler
 
 def refresh_token_periodically():
     refresh_token = os.getenv("DROP_BOX_REFRESH_TOKEN")
@@ -33,11 +32,6 @@ def refresh_token_periodically():
             print("Errore nel rinnovare l'access token.")
     else:
         print("Non è stato trovato il refresh token.")
-        
-def start_scheduler():
-    scheduler = BackgroundScheduler()
-    scheduler.add_job(refresh_token_periodically, 'interval', hours=3)  # Esegui ogni 3 ore
-    scheduler.start()
 
 
 def main():
@@ -65,13 +59,23 @@ def main():
     application.add_handler(CallbackQueryHandler(handle_callback))
 
     if application.job_queue:
+        print("job_queue è stato creato.")
         application.job_queue.run_daily(
             invia_messaggio_utenti,
-            time(hour=16, minute=38, second=0), 
+            time(hour=16, minute=52, second=0), 
         )
     else:
         print("Errore: job_queue non è stato creato!")
 
+    if application.job_queue:
+        print("Aggiorno il token ogni 3 ore.")
+        application.job_queue.run_repeating(
+            refresh_token_periodically,
+            interval=3 * 60 * 60,
+            first=0
+        )
+    else:
+        print("Errore: job_queue non è stato creato!")
     application.run_polling(allowed_updates=Update.ALL_TYPES)
 
 async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -82,5 +86,4 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await handle_get_info_card(update, context)
 
 if __name__ == "__main__":
-    start_scheduler()
     main()
