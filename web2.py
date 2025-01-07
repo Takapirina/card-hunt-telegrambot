@@ -74,7 +74,8 @@ def update_access_token(access_token):
 def home():
     state = str(uuid.uuid4()) 
     auth_url = get_authorization_url(CLIENT_ID, REDIRECT_URI, state)
-    return f'<a href="{auth_url}">Autorizza l\'app</a>'
+    return 'ciao mondo!'
+    #return f'<a href="{auth_url}">Autorizza l\'app</a>'
 
 @app.route('/callback')
 def callback():
@@ -113,4 +114,5 @@ if __name__ == "__main__":
     update_thread.daemon = True 
     update_thread.start()
     
-    app.run(debug=True, port=5000)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
