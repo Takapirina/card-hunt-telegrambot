@@ -5,6 +5,7 @@ from service.seleniumService import SeleniumService
 from entity.user import carica_utente
 
 async def invia_messaggio_utenti(context: ContextTypes.DEFAULT_TYPE):
+    print("all'interno di invia messaggio utenti")
     with open("user.json", "r") as f:
         utenti = json.load(f)
     

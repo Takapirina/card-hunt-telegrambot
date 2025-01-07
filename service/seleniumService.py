@@ -94,6 +94,7 @@ class SeleniumService:
             return None
         
     def update_prize(self, url):
+        print("all'interno di selenium con update prize")
         try:
             self.driver.get(url)
             lista_dati = self.driver.find_elements(By.CSS_SELECTOR, "div.info-list-container dl.labeled dd")
@@ -106,6 +107,7 @@ class SeleniumService:
             listaPrezzi = tabella.find_elements(By.CSS_SELECTOR, 
                 "div.price-container.d-none.d-md-flex.justify-content-end span.color-primary.small.text-end.text-nowrap.fw-bold")
             prezzo_attuale =  float(listaPrezzi[0].text.replace("€", "").replace(",", ".").strip())
+            print(f"prezzo trovato= {prezzo_attuale}")
             return {
                 "prezzo_di_tendenza": prezzo_corrente,
                 "prezzo_attuale" : prezzo_attuale
