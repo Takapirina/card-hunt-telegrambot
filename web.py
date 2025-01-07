@@ -53,9 +53,7 @@ def dropbox_auth():
             'Accept': 'application/vnd.heroku+json; version=3'
         }
         data = {
-            "env": {
                 "DROP_BOX_TOKEN": access_token
-            }
         }
         heroku_url = f"https://api.heroku.com/apps/{APP_NAME}/config-vars"
         print(f"headers: {headers} | data: {data} | heroku_url: {heroku_url}" )
