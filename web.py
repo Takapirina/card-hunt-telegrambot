@@ -1,6 +1,8 @@
 from flask import Flask, request, redirect, jsonify
 import requests
 import os
+import time
+import threading
 
 app = Flask(__name__)
 
@@ -64,7 +66,34 @@ def dropbox_auth():
 
     except requests.exceptions.RequestException as e:
         return f"Errore nella richiesta dei token: {e}", 500
+    
+LOGGIN_URL = os.getenv("LOGGIN_URL")
+
+def trigger_dropbox_login():
+    try:
+        print("Effettuando la richiesta per il login Dropbox...")
+        response = requests.get(LOGGIN_URL)
+        
+        if response.status_code == 302:
+            print("Richiesta di login Dropbox avviata con successo!")
+        else:
+            print(f"Errore: Status code {response.status_code}")
+    
+    except requests.exceptions.RequestException as e:
+        print(f"Errore nella richiesta al login Dropbox: {e}")
+
+def run_periodically():
+    while True:
+        trigger_dropbox_login()
+        print("Aspetto 3 ore prima di fare la richiesta di nuovo...")
+        time.sleep(1 * 2 * 60)
+
+def start_periodic_task():
+    thread = threading.Thread(target=run_periodically)
+    thread.daemon = True 
+    thread.start()
 
 if __name__ == "__main__":
+    start_periodic_task()
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
