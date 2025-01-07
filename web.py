@@ -1,12 +1,59 @@
 from flask import Flask, request, redirect, jsonify
 import requests
 import os
+import threading
+import time
 
 app = Flask(__name__)
 
 CLIENT_ID = os.getenv("APP_KEY")
 CLIENT_SECRET = os.getenv("APP_KEY_SECRET")
 REDIRECT_URI = os.getenv("REDIRECT_URL")
+
+APP_NAME = os.getenv("APP_NAME")
+HEROKU_API_KEY = os.getenv("HEROKU_API_KEY")
+
+def update_token():
+    while True:
+        try:
+            refresh_token = os.getenv("DROPBOX_REFRESH_TOKEN")
+            if not refresh_token:
+                print("Errore: nessun refresh_token trovato.")
+                break
+
+            token_url = "https://api.dropboxapi.com/oauth2/token"
+            data = {
+                "grant_type": "refresh_token",
+                "refresh_token": refresh_token,
+                "client_id": CLIENT_ID,
+                "client_secret": CLIENT_SECRET,
+            }
+
+            response = requests.post(token_url, data=data)
+            response.raise_for_status()
+
+            tokens = response.json()
+            new_token = tokens['access_token']
+
+            headers = {
+                "Authorization": f"Bearer {HEROKU_API_KEY}",
+                "Content-Type": "application/json",
+            }
+            data = {
+                "env": {
+                    "ACCESS_TOKEN": new_token 
+                }
+            }
+            heroku_url = f"https://api.heroku.com/apps/{APP_NAME}/config-vars"
+            put_response = requests.put(heroku_url, json=data, headers=headers)
+            put_response.raise_for_status()
+
+            print(f"Token aggiornato su Heroku: {new_token}")
+
+        except requests.exceptions.RequestException as e:
+            print(f"Errore nell'aggiornamento del token: {e}")
+
+        time.sleep(300)
 
 @app.route("/dropbox/login")
 def dropbox_login():
@@ -34,13 +81,31 @@ def dropbox_auth():
     }
     try:
         response = requests.post(token_url, data=data)
-        response.raise_for_status()  # Controlla eventuali errori
+        response.raise_for_status() 
         tokens = response.json()
+
+        refresh_token = tokens['refresh_token']
+        headers = {
+            "Authorization": f"Bearer {HEROKU_API_KEY}",
+            "Content-Type": "application/json",
+        }
+        data = {
+            "env": {
+                "DROPBOX_REFRESH_TOKEN": refresh_token 
+            }
+        }
+        heroku_url = f"https://api.heroku.com/apps/{APP_NAME}/config-vars"
+        put_response = requests.put(heroku_url, json=data, headers=headers)
+        put_response.raise_for_status()
 
         return jsonify(tokens)
     except requests.exceptions.RequestException as e:
         return f"Errore nella richiesta dei token: {e}", 500
 
+def start_token_refresh():
+    threading.Thread(target=update_token, daemon=True).start()
+
 if __name__ == "__main__":
+    start_token_refresh() 
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
