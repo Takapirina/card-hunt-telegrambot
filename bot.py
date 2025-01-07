@@ -21,10 +21,14 @@ from service.dropBoxService import download_user_json_file, downloads_wishlist_u
 
 from web2 import refresh_access_token, update_access_token
 
-def refresh_token_periodically():
-    refresh_token = os.getenv("DROP_BOX_REFRESH_TOKEN")
+def refresh_token_periodically(context=None):
+    refresh_token = context.job.context.get("refresh_token") if context else os.getenv("DROP_BOX_REFRESH_TOKEN")
     if refresh_token:
-        new_access_token = refresh_access_token(refresh_token, os.getenv("APP_KEY"), os.getenv("APP_KEY_SECRET"))
+        new_access_token = refresh_access_token(
+            refresh_token,
+            os.getenv("APP_KEY"),
+            os.getenv("APP_KEY_SECRET")
+        )
         if new_access_token:
             update_access_token(new_access_token)
             print("Access token aggiornato!")
@@ -69,6 +73,7 @@ def main():
 
     if application.job_queue:
         print("Aggiorno il token ogni 3 ore.")
+        refresh_token_periodically()
         application.job_queue.run_repeating(
             refresh_token_periodically,
             interval=3 * 60 * 60,
