@@ -49,7 +49,8 @@ def dropbox_auth():
 
         headers = {
             "Authorization": f"Bearer {HEROKU_API_KEY}",
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
+            'Accept': 'application/vnd.heroku+json; version=3'
         }
         data = {
             "env": {
@@ -58,7 +59,7 @@ def dropbox_auth():
         }
         heroku_url = f"https://api.heroku.com/apps/{APP_NAME}/config-vars"
         print(f"headers: {headers} | data: {data} | heroku_url: {heroku_url}" )
-        put_response = requests.put(heroku_url, json=data, headers=headers)
+        put_response = requests.patch(heroku_url, json=data, headers=headers)
         put_response.raise_for_status()
 
         return jsonify({"message": "Access token aggiornato con successo su Heroku", "access_token": access_token})
