@@ -84,7 +84,12 @@ def dropbox_auth():
         response.raise_for_status() 
         tokens = response.json()
 
-        refresh_token = tokens['refresh_token']
+        print(f"Tokens ricevuti: {tokens}")
+
+        refresh_token = tokens.get('refresh_token')
+        if not refresh_token:
+            return "Errore: Nessun refresh_token ricevuto.", 500
+
         headers = {
             "Authorization": f"Bearer {HEROKU_API_KEY}",
             "Content-Type": "application/json",
