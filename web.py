@@ -72,13 +72,19 @@ LOGGIN_URL = os.getenv("LOGGIN_URL")
 def trigger_dropbox_login():
     try:
         print("Effettuando la richiesta per il login Dropbox...")
-        response = requests.get(LOGGIN_URL)
+        response = requests.get("https://www.dropbox.com/oauth2/authorize?client_id=0yxff4r2ahokbpu&response_type=code&redirect_uri=https://card-telegram-bot-hunt-0a642d58906e.herokuapp.com/callback")
         
         if response.status_code == 302:
-            print("Richiesta di login Dropbox avviata con successo!")
+            print("Richiesta di login Dropbox avviata con successo! Redirezionando...")
+            print(f"URL di reindirizzamento: {response.headers['Location']}")
+        elif response.status_code == 200:
+            print("L'utente potrebbe essere già loggato o la pagina di login è visibile.")
+            if "login" in response.text or "Sign in" in response.text:
+                print("Pagina di login Dropbox rilevata.")
+            else:
+                print(f"Contenuto della risposta: {response.text}")
         else:
             print(f"Errore: Status code {response.status_code}")
-            print("Contenuto della risposta:", response.text)
     
     except requests.exceptions.RequestException as e:
         print(f"Errore nella richiesta al login Dropbox: {e}")
