@@ -4,6 +4,7 @@ import requests
 import time
 from flask import Flask, redirect, request, jsonify
 from threading import Thread
+from apscheduler.schedulers.background import BackgroundScheduler
 
 app = Flask(__name__)
 
@@ -93,25 +94,26 @@ def callback():
     else:
         return "Errore nell'ottenere i token", 400
 
+# Funzione per l'aggiornamento periodico dei token
 def periodic_update():
-    while True:
-
-        refresh_token = os.getenv("DROP_BOX_REFRESH_TOKEN")
-        if refresh_token:
-            new_access_token = refresh_access_token(refresh_token, CLIENT_ID, CLIENT_SECRET)
-            if new_access_token:
-                update_access_token(new_access_token)
-            else:
-                print("Errore nel rinnovare l'access token.")
+    refresh_token = os.getenv("DROP_BOX_REFRESH_TOKEN")
+    if refresh_token:
+        new_access_token = refresh_access_token(refresh_token, CLIENT_ID, CLIENT_SECRET)
+        if new_access_token:
+            update_access_token(new_access_token)
         else:
-            print("Errore: non è stato trovato un refresh token.")
-        
-        time.sleep(3 * 60 * 60)
+            print("Errore nel rinnovare l'access token.")
+    else:
+        print("Errore: non è stato trovato un refresh token.")
+
+# Configura e avvia il task scheduler
+def start_scheduler():
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(periodic_update, 'interval', hours=3)  # Ogni 3 ore
+    scheduler.start()
 
 if __name__ == "__main__":
-    update_thread = Thread(target=periodic_update)
-    update_thread.daemon = True 
-    update_thread.start()
+    start_scheduler()  # Avvia il task scheduler
     
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
