@@ -41,7 +41,7 @@ def update_token():
             }
             data = {
                 "env": {
-                    "ACCESS_TOKEN": new_token 
+                    "DROP_BOX_TOKEN": new_token 
                 }
             }
             heroku_url = f"https://api.heroku.com/apps/{APP_NAME}/config-vars"
