@@ -62,7 +62,7 @@ def main():
         print("job_queue è stato creato.")
         application.job_queue.run_daily(
             invia_messaggio_utenti,
-            time(hour=18, minute=00, second=0), 
+            time(hour=18, minute=10, second=0), 
         )
     else:
         print("Errore: job_queue non è stato creato!")

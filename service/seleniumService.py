@@ -108,6 +108,8 @@ class SeleniumService:
                 "div.price-container.d-none.d-md-flex.justify-content-end span.color-primary.small.text-end.text-nowrap.fw-bold")
             prezzo_attuale =  float(listaPrezzi[0].text.replace("€", "").replace(",", ".").strip())
             print(f"prezzo trovato= {prezzo_attuale}")
+            self.driver.save_screenshot('screenshot.png')
+            upload_screenshot_result()
             return {
                 "prezzo_di_tendenza": prezzo_corrente,
                 "prezzo_attuale" : prezzo_attuale
