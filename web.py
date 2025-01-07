@@ -43,6 +43,7 @@ def dropbox_auth():
         print(f"Tokens ricevuti: {tokens}")
 
         access_token = tokens.get('access_token')
+        print(access_token)
         if not access_token:
             return "Errore: Nessun access_token ricevuto.", 500
 
@@ -56,6 +57,7 @@ def dropbox_auth():
             }
         }
         heroku_url = f"https://api.heroku.com/apps/{APP_NAME}/config-vars"
+        print(f"headers: {headers} | data: {data} | heroku_url: {heroku_url}" )
         put_response = requests.put(heroku_url, json=data, headers=headers)
         put_response.raise_for_status()
 
