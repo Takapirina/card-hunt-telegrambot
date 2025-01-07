@@ -2,6 +2,7 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes, ConversationHandler, CallbackContext, CallbackQueryHandler, Updater
 from dotenv import load_dotenv
 import os
+from datetime import time
 
 from service.commands.start import start
 from service.commands.help import help, set_commands
@@ -44,10 +45,9 @@ def main():
     application.add_handler(CallbackQueryHandler(handle_callback))
 
     if application.job_queue:
-        application.job_queue.run_repeating(
+        application.job_queue.run_daily(
             invia_messaggio_utenti,
-            interval=24 * 60 * 60, 
-            first=0
+            time(hour=9, minute=0, second=0),  # Orario specifico (9:00 AM)
         )
     else:
         print("Errore: job_queue non è stato creato!")
