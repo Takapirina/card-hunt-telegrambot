@@ -78,6 +78,7 @@ def trigger_dropbox_login():
             print("Richiesta di login Dropbox avviata con successo!")
         else:
             print(f"Errore: Status code {response.status_code}")
+            print("Contenuto della risposta:", response.text)
     
     except requests.exceptions.RequestException as e:
         print(f"Errore nella richiesta al login Dropbox: {e}")
