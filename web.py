@@ -59,7 +59,7 @@ def dropbox_auth():
         put_response = requests.put(heroku_url, json=data, headers=headers)
         put_response.raise_for_status()
 
-        return jsonify(tokens)
+        return jsonify({"message": "Access token aggiornato con successo su Heroku", "access_token": access_token})
 
     except requests.exceptions.RequestException as e:
         return f"Errore nella richiesta dei token: {e}", 500
