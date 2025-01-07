@@ -73,7 +73,6 @@ def main():
 
     if application.job_queue:
         print("Aggiorno il token ogni 3 ore.")
-        refresh_token_periodically()
         application.job_queue.run_repeating(
             refresh_token_periodically,
             interval=3 * 60 * 60,
