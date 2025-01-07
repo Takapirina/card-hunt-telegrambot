@@ -44,6 +44,14 @@ def refresh_access_token(refresh_token, client_id, client_secret):
             "client_secret": client_secret,
         }
     )
+    print("Request payload:", {
+        "refresh_token": refresh_token,
+        "client_id": client_id,
+        "client_secret": client_secret[:4] + "****"
+    })
+    print("Response status:", response.status_code)
+    print("Response body:", response.text)
+
     if response.status_code == 200:
         tokens = response.json()
         return tokens['access_token']
