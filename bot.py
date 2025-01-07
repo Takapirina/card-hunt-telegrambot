@@ -19,6 +19,26 @@ from service.broadcast import invia_messaggio_utenti
 
 from service.dropBoxService import download_user_json_file, downloads_wishlist_user ,download_brand_json_file
 
+from web2 import refresh_access_token, update_access_token
+from apscheduler.schedulers.background import BackgroundScheduler
+
+def refresh_token_periodically():
+    refresh_token = os.getenv("DROP_BOX_REFRESH_TOKEN")
+    if refresh_token:
+        new_access_token = refresh_access_token(refresh_token, os.getenv("APP_KEY"), os.getenv("APP_KEY_SECRET"))
+        if new_access_token:
+            update_access_token(new_access_token)
+            print("Access token aggiornato!")
+        else:
+            print("Errore nel rinnovare l'access token.")
+    else:
+        print("Non è stato trovato il refresh token.")
+        
+def start_scheduler():
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(refresh_token_periodically, 'interval', hours=3)  # Esegui ogni 3 ore
+    scheduler.start()
+
 
 def main():
     load_dotenv()
@@ -47,7 +67,7 @@ def main():
     if application.job_queue:
         application.job_queue.run_daily(
             invia_messaggio_utenti,
-            time(hour=9, minute=0, second=0),  # Orario specifico (9:00 AM)
+            time(hour=17, minute=30, second=0),  # Orario specifico (9:00 AM)
         )
     else:
         print("Errore: job_queue non è stato creato!")
@@ -62,4 +82,5 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await handle_get_info_card(update, context)
 
 if __name__ == "__main__":
+    start_scheduler()
     main()
