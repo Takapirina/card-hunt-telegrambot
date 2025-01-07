@@ -74,8 +74,7 @@ def update_access_token(access_token):
 def home():
     state = str(uuid.uuid4()) 
     auth_url = get_authorization_url(CLIENT_ID, REDIRECT_URI, state)
-    return 'ciao mondo!'
-    #return f'<a href="{auth_url}">Autorizza l\'app</a>'
+    return f'<a href="{auth_url}">Autorizza l\'app</a>'
 
 @app.route('/callback')
 def callback():
