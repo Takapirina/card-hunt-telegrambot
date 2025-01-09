@@ -22,7 +22,7 @@ from service.dropBoxService import download_user_json_file, downloads_wishlist_u
 from web2 import refresh_access_token, update_access_token
 
 def refresh_token_periodically(context=None):
-    refresh_token = context.job.context.get("refresh_token") if context else os.getenv("DROP_BOX_REFRESH_TOKEN")
+    refresh_token = os.getenv("DROP_BOX_REFRESH_TOKEN")
     if refresh_token:
         new_access_token = refresh_access_token(
             refresh_token,
